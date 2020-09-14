@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="错误类型 错误分为Errors和Faults两种  Errors 这种错误表示客户端传入了错误的数据，服务端正确的拒绝了客户端的数据，返4xx错误，Errors不会影响API的可用性Faults 表示服务端的错误，客户端正确的传入了数据，但是服务端不能正确返回结果，返回5xx错误，Faults会影响API的可用性  方法 除了常用的GET,PUT,POST,DELETE之外，还有一个PATCH方">
+<meta name="keywords" content="tips">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RESTful API 设计原则">
+<meta property="og:url" content="http://cnds.github.io/2018/07/29/RESTful API设计心得/index.html">
+<meta property="og:site_name" content="Ding Song">
+<meta property="og:description" content="错误类型 错误分为Errors和Faults两种  Errors 这种错误表示客户端传入了错误的数据，服务端正确的拒绝了客户端的数据，返4xx错误，Errors不会影响API的可用性Faults 表示服务端的错误，客户端正确的传入了数据，但是服务端不能正确返回结果，返回5xx错误，Faults会影响API的可用性  方法 除了常用的GET,PUT,POST,DELETE之外，还有一个PATCH方">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-01-02T14:33:18.001Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RESTful API 设计原则">
+<meta name="twitter:description" content="错误类型 错误分为Errors和Faults两种  Errors 这种错误表示客户端传入了错误的数据，服务端正确的拒绝了客户端的数据，返4xx错误，Errors不会影响API的可用性Faults 表示服务端的错误，客户端正确的传入了数据，但是服务端不能正确返回结果，返回5xx错误，Faults会影响API的可用性  方法 除了常用的GET,PUT,POST,DELETE之外，还有一个PATCH方">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>RESTful API 设计原则</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="http://github.com/gabithume">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/08/05/Python native coroutine和generator base　coroutine/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/05/16/docker私有仓库的建立/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://cnds.github.io/2018/07/29/RESTful API设计心得/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&text=RESTful API 设计原则"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&is_video=false&description=RESTful API 设计原则"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RESTful API 设计原则&body=Check out this article: http://cnds.github.io/2018/07/29/RESTful API设计心得/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&name=RESTful API 设计原则&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#错误类型"><span class="toc-number">1.</span> <span class="toc-text">错误类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Errors"><span class="toc-number">1.1.</span> <span class="toc-text">Errors</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Faults"><span class="toc-number">1.2.</span> <span class="toc-text">Faults</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法"><span class="toc-number">2.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关键敏感信息"><span class="toc-number">3.</span> <span class="toc-text">关键敏感信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#集合的处理"><span class="toc-number">4.</span> <span class="toc-text">集合的处理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#路由的格式"><span class="toc-number">4.1.</span> <span class="toc-text">路由的格式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#大数据集合"><span class="toc-number">4.2.</span> <span class="toc-text">大数据集合</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#长时间运行的操作"><span class="toc-number">5.</span> <span class="toc-text">长时间运行的操作</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        RESTful API 设计原则
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Ding Song</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-07-29T14:39:00.000Z" itemprop="datePublished">2018-07-29</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/tips/">tips</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="错误类型"><a href="#错误类型" class="headerlink" title="错误类型"></a>错误类型</h4><blockquote>
+<p>错误分为Errors和Faults两种</p>
+</blockquote>
+<h5 id="Errors"><a href="#Errors" class="headerlink" title="Errors"></a>Errors</h5><ul>
+<li>这种错误表示客户端传入了错误的数据，服务端正确的拒绝了客户端的数据，返4xx错误，Errors不会影响API的可用性<h5 id="Faults"><a href="#Faults" class="headerlink" title="Faults"></a>Faults</h5></li>
+<li>表示服务端的错误，客户端正确的传入了数据，但是服务端不能正确返回结果，返回5xx错误，Faults会影响API的可用性</li>
+</ul>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><blockquote>
+<p>除了常用的GET,PUT,POST,DELETE之外，还有一个PATCH方法（<a href="https://tools.ietf.org/html/rfc5789" target="_blank" rel="noopener">RFC 5789</a>），是比较容易被忽略的，很多情况下都被PUT取代了，但是在定义上，这两个方法还是不太一样的</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Is Idempotent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">GET</td>
+<td style="text-align:center">Return the current value of an object</td>
+<td style="text-align:center">True</td>
+</tr>
+<tr>
+<td style="text-align:center">PUT</td>
+<td style="text-align:center">Replace an object, or create a named object, when applcable</td>
+<td style="text-align:center">True</td>
+</tr>
+<tr>
+<td style="text-align:center">DELETE</td>
+<td style="text-align:center">Delete an object</td>
+<td style="text-align:center">True</td>
+</tr>
+<tr>
+<td style="text-align:center">POST</td>
+<td style="text-align:center">Create a new object based on the data provided, or submit a command</td>
+<td style="text-align:center">False</td>
+</tr>
+<tr>
+<td style="text-align:center">HEAD</td>
+<td style="text-align:center">Return metadata of an object of a GET response. Resources that support the GET method MAY support the HEAD method as well</td>
+<td style="text-align:center">True</td>
+</tr>
+<tr>
+<td style="text-align:center">PATCH</td>
+<td style="text-align:center">Apply a partial update to an object</td>
+<td style="text-align:center">False</td>
+</tr>
+<tr>
+<td style="text-align:center">OPTIONS</td>
+<td style="text-align:center">Get information about a request</td>
+<td style="text-align:center">True</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>可以看到，PUT是修改一整个对象，PATCH只是修改对象的一部分，而且PUT是幂等的，PATCH不是。PATCH支持UPSERT语义，如果服务器支持PATCH的UPSERT语义，那么在接受到数据时，需要对资源进行判断，如果是一个不存在对资源，则此时相当于create，否则相当于update。</p>
+<p>如果客户端想告诉服务端是否支持UPSERT，可以在HTTP headers中根据If-Match或If-None-Match来表示。如果有If-Match则不能支持create, 如果有If-None-Match: *，则不支持update。</p>
+</blockquote>
+<h4 id="关键敏感信息"><a href="#关键敏感信息" class="headerlink" title="关键敏感信息"></a>关键敏感信息</h4><blockquote>
+<p>一般不建议将关键信息放在URL上，可以将这些信息通过header传递，但是并不是所有的客户端都支持这样做，所以需要根据实际情况考虑。</p>
+<ul>
+<li>比如，设备的唯一识别号sn,如果放在URL上，就不是很安全，这时候可以考虑放在headers</li>
+</ul>
+</blockquote>
+<h4 id="集合的处理"><a href="#集合的处理" class="headerlink" title="集合的处理"></a>集合的处理</h4><h5 id="路由的格式"><a href="#路由的格式" class="headerlink" title="路由的格式"></a>路由的格式</h5><blockquote>
+<p>https://{serviceRoot}/{collection}/{id}</p>
+</blockquote>
+<h5 id="大数据集合"><a href="#大数据集合" class="headerlink" title="大数据集合"></a>大数据集合</h5><blockquote>
+<p>一般大数据的集合，服务器都会采用分页来处理，在第一个集合中必须带有下一页都地址(nextLink)，这样既能保证每次单独使用API时数据量不大，又可以在处理需要取得所有数据的情况时，根据nextLink取得所有数据</p>
+</blockquote>
+<h4 id="长时间运行的操作"><a href="#长时间运行的操作" class="headerlink" title="长时间运行的操作"></a>长时间运行的操作</h4><blockquote>
+<p>有时候会碰到需要长时间计算才能有结果的请求，这时候就时长时间运行的操作，类似于异步</p>
+<ul>
+<li>客户端发出请求后，服务端不能直接返回结果，需要返回HTTP/1.1 202 Accepted 作为结果，这个202的状态不带任何返回的body。headers中带Operation-Location表示实际正在操作的集合，这个location支持GET查询，可以查询到操作的状态(NotStarted|Running|Succeeded|Failed)，还可以提供操作开始结束时间，甚至完成的百分比，如果是完成状态，需要带上请求的resourceLocation。有需要的话，可以在headers带上Retry-After字段，提示客户端在一段时间后重新请求。</li>
+<li>比如从 <a href="https://api.example.com/v1.0/datbases/db1" target="_blank" rel="noopener">https://api.example.com/v1.0/datbases/db1</a> 请求，得到202状态和Operation-Location(<a href="https://api.example.com/v1.0/operations/123)，客户端就可以查询合格Operation-Location得到操作的状态，如果是成功了，同时还会得到resourceLocation(https://api.example.com/v1.0/datbases/db1)，如果有Retry-After" target="_blank" rel="noopener">https://api.example.com/v1.0/operations/123)，客户端就可以查询合格Operation-Location得到操作的状态，如果是成功了，同时还会得到resourceLocation(https://api.example.com/v1.0/datbases/db1)，如果有Retry-After</a> header，客户端在一段时间后再次请求Operation-Location</li>
+<li>除了Retry-After方式之外，还有可以通过推送的方式通知客户端操作完成，这样需要客户端在请求操作的时候同时订阅消息。</li>
+</ul>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="http://github.com/gabithume">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#错误类型"><span class="toc-number">1.</span> <span class="toc-text">错误类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Errors"><span class="toc-number">1.1.</span> <span class="toc-text">Errors</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Faults"><span class="toc-number">1.2.</span> <span class="toc-text">Faults</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法"><span class="toc-number">2.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关键敏感信息"><span class="toc-number">3.</span> <span class="toc-text">关键敏感信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#集合的处理"><span class="toc-number">4.</span> <span class="toc-text">集合的处理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#路由的格式"><span class="toc-number">4.1.</span> <span class="toc-text">路由的格式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#大数据集合"><span class="toc-number">4.2.</span> <span class="toc-text">大数据集合</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#长时间运行的操作"><span class="toc-number">5.</span> <span class="toc-text">长时间运行的操作</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://cnds.github.io/2018/07/29/RESTful API设计心得/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&text=RESTful API 设计原则"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&is_video=false&description=RESTful API 设计原则"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RESTful API 设计原则&body=Check out this article: http://cnds.github.io/2018/07/29/RESTful API设计心得/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&title=RESTful API 设计原则"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://cnds.github.io/2018/07/29/RESTful API设计心得/&name=RESTful API 设计原则&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Ding Song
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="http://github.com/gabithume">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+

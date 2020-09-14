@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="面向切面编程(AOP) Spring支持5种类型的通知，Before, After, After-returning, After-throwing, Around，提供4种类型的AOP支持，基于代理的Spring AOP， POJO切面，@AspectJ注解驱动切面，注入式AspectJ切面   Spring通过AOP容器在运行时为目标动态地创建一个代理对象织入(weaving)切面，即在运行时">
+<meta name="keywords" content="Java,Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring学习笔记II">
+<meta property="og:url" content="http://cnds.github.io/2018/03/20/Spring学习笔记II/index.html">
+<meta property="og:site_name" content="Ding Song">
+<meta property="og:description" content="面向切面编程(AOP) Spring支持5种类型的通知，Before, After, After-returning, After-throwing, Around，提供4种类型的AOP支持，基于代理的Spring AOP， POJO切面，@AspectJ注解驱动切面，注入式AspectJ切面   Spring通过AOP容器在运行时为目标动态地创建一个代理对象织入(weaving)切面，即在运行时">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-01-02T14:33:18.001Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring学习笔记II">
+<meta name="twitter:description" content="面向切面编程(AOP) Spring支持5种类型的通知，Before, After, After-returning, After-throwing, Around，提供4种类型的AOP支持，基于代理的Spring AOP， POJO切面，@AspectJ注解驱动切面，注入式AspectJ切面   Spring通过AOP容器在运行时为目标动态地创建一个代理对象织入(weaving)切面，即在运行时">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Spring学习笔记II</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- rss -->
+    
+    
+</head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="http://github.com/gabithume">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/05/16/docker私有仓库的建立/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/03/13/Spring学习笔记/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://cnds.github.io/2018/03/20/Spring学习笔记II/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&text=Spring学习笔记II"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&is_video=false&description=Spring学习笔记II"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring学习笔记II&body=Check out this article: http://cnds.github.io/2018/03/20/Spring学习笔记II/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&name=Spring学习笔记II&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#面向切面编程-AOP"><span class="toc-number">1.</span> <span class="toc-text">面向切面编程(AOP)</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Spring学习笔记II
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Ding Song</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-03-20T05:20:30.000Z" itemprop="datePublished">2018-03-20</time>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/Spring/">Spring</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="面向切面编程-AOP"><a href="#面向切面编程-AOP" class="headerlink" title="面向切面编程(AOP)"></a>面向切面编程(AOP)</h4><ul>
+<li>Spring支持5种类型的通知，<strong><em>Before, After, After-returning, After-throwing, Around</em></strong>，提供4种类型的AOP支持，<strong><em>基于代理的Spring AOP， POJO切面，@AspectJ注解驱动切面，注入式AspectJ切面</em></strong></li>
+</ul>
+<ul>
+<li>Spring通过AOP容器在运行时为目标动态地创建一个代理对象织入(weaving)切面，即在运行时才创建代理对象，且只支持方法连接点，如果需要方法拦截之外的连接点功能，则需要使用Aspect</li>
+</ul>
+<ul>
+<li><p>Spring 文档中对AOP相关的概念做了介绍</p>
+<blockquote>
+<ul>
+<li><em>Aspect</em>: a modularization of a concern that cuts across multiple classes. Transaction management is a good example of a crosscutting concern in enterprise Java applications. In Spring AOP, aspects are implemented using regular classes (the <a href="https://docs.spring.io/spring/docs/5.0.9.RELEASE/spring-framework-reference/core.html#aop-schema" target="_blank" rel="noopener">schema-based approach</a>) or regular classes annotated with the <code>@Aspect</code> annotation (the <a href="https://docs.spring.io/spring/docs/5.0.9.RELEASE/spring-framework-reference/core.html#aop-ataspectj" target="_blank" rel="noopener"><code>@AspectJ</code> style</a>).</li>
+<li><em>Join point</em>: a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point <em>always</em> represents a method execution.</li>
+<li><em>Advice</em>: action taken by an aspect at a particular join point. Different types of advice include “around”, “before” and “after” advice. (Advice types are discussed below.) Many AOP frameworks, including Spring, model an advice as an <em>interceptor</em>, maintaining a chain of interceptors <em>around</em> the join point.</li>
+<li><em>Pointcut</em>: a predicate that matches join points. Advice is associated with a pointcut expression and runs at any join point matched by the pointcut (for example, the execution of a method with a certain name). The concept of join points as matched by pointcut expressions is central to AOP, and Spring uses the AspectJ pointcut expression language by default.</li>
+<li><em>Introduction</em>: declaring additional methods or fields on behalf of a type. Spring AOP allows you to introduce new interfaces (and a corresponding implementation) to any advised object. For example, you could use an introduction to make a bean implement an <code>IsModified</code> interface, to simplify caching. (An introduction is known as an inter-type declaration in the AspectJ community.)</li>
+<li><em>Target object</em>: object being advised by one or more aspects. Also referred to as the <em>advised</em> object. Since Spring AOP is implemented using runtime proxies, this object will always be a <em>proxied</em> object.</li>
+<li><em>AOP proxy</em>: an object created by the AOP framework in order to implement the aspect contracts (advise method executions and so on). In the Spring Framework, an AOP proxy will be a JDK dynamic proxy or a CGLIB proxy.</li>
+<li><em>Weaving</em>: linking aspects with other application types or objects to create an advised object. This can be done at compile time (using the AspectJ compiler, for example), load time, or at runtime. Spring AOP, like other pure Java AOP frameworks, performs weaving at runtime.</li>
+</ul>
+<p>Types of advice:</p>
+<ul>
+<li><em>Before advice</em>: Advice that executes before a join point, but which does not have the ability to prevent execution flow proceeding to the join point (unless it throws an exception).</li>
+<li><em>After returning advice</em>: Advice to be executed after a join point completes normally: for example, if a method returns without throwing an exception.</li>
+<li><em>After throwing advice</em>: Advice to be executed if a method exits by throwing an exception.</li>
+<li><em>After (finally) advice</em>: Advice to be executed regardless of the means by which a join point exits (normal or exceptional return).</li>
+<li><em>Around advice</em>: Advice that surrounds a join point such as a method invocation. This is the most powerful kind of advice. Around advice can perform custom behavior before and after the method invocation. It is also responsible for choosing whether to proceed to the join point or to shortcut the advised method execution by returning its own return value or throwing an exception.</li>
+</ul>
+</blockquote>
+<p><em>AOP的术语较多，需要多理解</em></p>
+</li>
+</ul>
+<ul>
+<li><p>编写切点(Pointcut)</p>
+<blockquote>
+<p>切点表达式，设置切点方法执行时触发通知(advise)，<code>execution(* com.Test.exec(...))</code>，其中execution代表方法执行时触发，第一个*表示返回任意类型， 中间的com.Test表示方法所属的类，exec表示方法, …表示使用任意参数</p>
+<p>切点表达式里还可以通过&amp;&amp;、||和!来组合命令, <code>execution(* com.Test.exec(...) &amp;&amp; within(com.Test1.*))</code>表示com.Test包内的任何方法被调用时执行表达式</p>
+<p>还可以使用<code>execution(* com.Test.exec(...) &amp;&amp; bean(&#39;test2&#39;))</code>表示切面的通知会被编织到ID为test2的bean中</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p>定义切面(Aspect)</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="meta">@Aspect</span></span><br><span class="line">&gt; <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AspectDemo</span> </span>&#123;</span><br><span class="line">&gt;     </span><br><span class="line">&gt;     <span class="meta">@Pointcut</span>(*execution(** com.Text.exec(...))*)</span><br><span class="line">&gt;     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pointDemo</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&gt;     </span><br><span class="line">&gt;     <span class="meta">@Before</span>(* pointDemo() *)</span><br><span class="line">&gt;     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execBefore</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>利用<code>@Pointcut</code>注解设置切点表达式，如上面的代码，设置了方法pointDemo为切点表达式，这样就可以在别的地方重用，pointDemo是一个空函数，只做标识用，供<code>@Pointcut</code>注解依附</p>
+</blockquote>
+<p><strong><em>整个切面表达式的语法含义比较明确，就是before|after某个函数之前，执行这个被注解的通知</em></strong></p>
+</li>
+<li><p>自动代理</p>
+<blockquote>
+<p>使用<code>@EnableAspectJAutoProxy</code>注解可以实现自动代理，自动使用<code>@Aspect</code>注解的bean创建一个代理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="meta">@EnableAspectJAutoProxy</span></span><br><span class="line">&gt; <span class="meta">@ComponentScan</span></span><br><span class="line">&gt; <span class="meta">@Configuration</span></span><br><span class="line">&gt; <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line">&gt;     </span><br><span class="line">&gt;     <span class="meta">@Bean</span></span><br><span class="line">&gt;     <span class="function"><span class="keyword">public</span> AspectDemo <span class="title">aspectDemo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&gt;         <span class="keyword">return</span> <span class="keyword">new</span> AspectDemo();</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt; <span class="comment">// 使用手动注入的方式创建了切面的bean，同时通过@EnableAspectJAutoProxy注解启动自动代理</span></span><br><span class="line">&gt; <span class="comment">// 如果不使用自动代理的注解，那么这个切面会被当作普通的bean处理，不会被视为切面</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>带参数的切面表达式</p>
+<blockquote>
+<p>如果需要在表达式中带参数，则表达式要写成类似<code>@Pointcut(* execution(**  com.Test.exec(int)) &amp;&amp; args(inputNumber))</code>，exec函数中写接受参数的类型，args中写参数名</p>
+<p>实际上，args(inputNumber)的意思是exec()的参数也会传递到通知方法(advise)中，这样就可以做到切点到通知方法的参数传递</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="meta">@Aspect</span></span><br><span class="line">&gt; <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AspectDemo</span> </span>&#123;</span><br><span class="line">&gt;     <span class="meta">@Pointcut</span>(*execution(* com.Test.exec(<span class="keyword">int</span>)) &amp;&amp; args(inputNumber) *)</span><br><span class="line">&gt;     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pointDemo</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&gt;     </span><br><span class="line">&gt;     <span class="meta">@Before</span>(* poingDemo(inputNumber) *)</span><br><span class="line">&gt;     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execBefore</span><span class="params">(<span class="keyword">int</span> inputNumber)</span> </span>&#123;</span><br><span class="line">&gt;         ...</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>引入新功能 (Introductions)</p>
+<blockquote>
+<p>通过<code>@DeclareParents</code>注解，将新的接口引入到bean中，语法是<code>@DeclareParents(value=&quot;com.Test.*&quot;, defaultImpl=newInterfaceImpl.class)</code></p>
+<p>可以看出来，这个注解的意思就是为value增加一个新的接口，这里引入的是newInterface</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment">// 文档中的例子</span></span><br><span class="line">&gt; <span class="meta">@Aspect</span></span><br><span class="line">&gt; <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UsageTracking</span> </span>&#123;</span><br><span class="line">&gt; </span><br><span class="line">&gt;     <span class="meta">@DeclareParents</span>(value=<span class="string">"com.xzy.myapp.service.*+"</span>, defaultImpl=DefaultUsageTracked<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">&gt;     <span class="title">public</span> <span class="title">static</span> <span class="title">UsageTracked</span> <span class="title">mixin</span></span>;</span><br><span class="line">&gt; </span><br><span class="line">&gt;     <span class="meta">@Before</span>(<span class="string">"com.xyz.myapp.SystemArchitecture.businessService() &amp;&amp; this(usageTracked)"</span>)</span><br><span class="line">&gt;     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">recordUsage</span><span class="params">(UsageTracked usageTracked)</span> </span>&#123;</span><br><span class="line">&gt;         usageTracked.incrementUseCount();</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt; </span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="http://github.com/gabithume">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#面向切面编程-AOP"><span class="toc-number">1.</span> <span class="toc-text">面向切面编程(AOP)</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://cnds.github.io/2018/03/20/Spring学习笔记II/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&text=Spring学习笔记II"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&is_video=false&description=Spring学习笔记II"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring学习笔记II&body=Check out this article: http://cnds.github.io/2018/03/20/Spring学习笔记II/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&title=Spring学习笔记II"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://cnds.github.io/2018/03/20/Spring学习笔记II/&name=Spring学习笔记II&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Ding Song
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="http://github.com/gabithume">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
